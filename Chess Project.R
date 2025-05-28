@@ -316,6 +316,26 @@ ggplot(df_top5, aes(x = strategy_color, y = count, fill = opening_eco)) +
 # overall Scandinavian Defense is the most common stratgey used in the dataset and by the black players, the generic one and Mises-Krotoc vairety in total are 464 times used, howver from white players side the Queen' Pawn Game is the most common with total count of 361, there's a pattern of different vaireties of strategy used is common across the data we have, for example Philidor Defense is the most commonly used by black players with 362, however that number is nearly half divided between varitey #2 and #3, so we took that into account while showing the Top 5 by the most common opening ECO code, as we can see from the legends that we group fill stacks of the same ECO code with same colour, regardless if their label but we specify them on the stack with each one's count for understandability,
 # Secondly there's a a quite difference between the strategies used by black and white players, strategies used by white are commonly attack stratgies or pawn openings since the white is the first player to start, he has the advantage of shaping the opening of the game, however the black players usually set counter-attack or defense stratgies against white players as all the top 5 openings by black have Defense in their opening name
 
+# Analytical Question 3.
+
+df1 <- df 
+
+# Calculate average rating for each game (since we have both white and black player ratings)
+df1 <- df1 %>%
+  mutate(avg_rating = (white_rating + black_rating) / 2)
+
+ggplot(df1 ,aes(x = avg_rating , y = turns))+
+  geom_point(aes(colour = rated), alpha = 0.6)+
+  theme_minimal()+ 
+  geom_smooth(method = "loess",color = "red")+
+  geom_smooth(method = "lm",color = "blue")
+# Correlation analysis
+correlation <- cor(chess_data$avg_rating, chess_data$turns, use = "complete.obs")
+print(paste("Correlation between average rating and game length:", round(correlation, 3)))
+# Basic statistics
+summary(df1$turns)
+summary(df1$avg_rating)
+
 #unique number of openings
 nlevels(factor(df$opening_name))
 nlevels(factor(df$opening_eco))
@@ -325,6 +345,7 @@ nlevels(factor(df$victory_status))
 df$moves
 
 fct_infreq(df$opening_eco)
+
 
 ### Balanced Dataset
 
